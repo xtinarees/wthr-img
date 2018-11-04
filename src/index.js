@@ -515,7 +515,7 @@ class Body extends React.Component {
   setInitialWeatherState(result) {
     let _this = this;
     let date = new Date();
-    let dateStamp = date.getTime();
+    let dateStamp = Math.floor(date.getTime()/1000);
     let moonPhase = SunCalc.getMoonIllumination(date).phase;
 
     _this.setState({ rangeMoonPhase: getInitialMoonPhaseValue(moonPhase) });
