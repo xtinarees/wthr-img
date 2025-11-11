@@ -118,12 +118,23 @@ function Body() {
     return () => { isMounted = false; };
   }, []);
 
-  const handleChangeControls = useCallback((closed) => setIsControlsClosed(closed), []);
-  const handleChangeTemperatureRange = useCallback((val) => setTemp(val), []);
-  const handleChangeMoonRange = useCallback((val) => setRangeMoonPhase(val), []);
-  const handleChangeHumidityRange = useCallback((val) => setRangeHumidityVal(val), []);
-  const handleChangeTime = useCallback((night) => setIsNight(night), []);
-  const handleChangeCondition = useCallback((selectedCondition) => {
+  const handleChangeControls = (closed) => {
+    setIsControlsClosed(closed);
+  };
+  const handleChangeTemperatureRange = (val) => {
+    setTemp(val);
+  };
+  const handleChangeMoonRange = (val) => {
+    setRangeMoonPhase(val);
+  }
+  const handleChangeHumidityRange = (val) => {
+    setRangeHumidityVal(val);
+  }
+  const handleChangeTime = (val) => {
+    setIsNight(val);
+  };
+  
+  const handleChangeCondition = (selectedCondition) => {
     setSelectedConditions(prev => {
       if (prev.includes(selectedCondition)) {
         return prev.filter(item => item !== selectedCondition);
@@ -131,13 +142,14 @@ function Body() {
         return [...prev, selectedCondition];
       }
     });
-  }, []);
+  };
+
 
   const isRainy = selectedConditions.includes('rainy');
   const humidityVal = isRainy ? 100 : rangeHumidityVal;
   const controlsStyle = isControlsClosed ? {display:'none'} : {display: 'block'};
-  const color = getColor(temp);
-  const isColorDark = tinycolor(color).isDark();
+  const mainColor = getColor(temp, isNight);
+  const isColorDark = tinycolor(mainColor).isDark();
   const contentColor = isColorDark ? 'white' : 'black';
   const contentStyle = { color: contentColor };
   let contentClasses = isControlsClosed ? 'is-closed-controls' : 'is-open-controls';
@@ -146,8 +158,8 @@ function Body() {
 
   return (
     <div className={'content ' + contentClasses} style={contentStyle}>
-      <Background color={color} />
-      <BackgroundControls color={color} />
+      <Background color={mainColor} />
+      <BackgroundControls color={mainColor} />
       <div className="controls">
         <ControlsControl 
           handleChange={handleChangeControls}
@@ -185,19 +197,14 @@ function Body() {
           />
         </div>
       </div>
-      {/* 
-      <Night 
-        isNight={isNight} 
-        color={color}
-      /> */}
       <Moon
         phase={rangeMoonPhase}
-        color={color}
+        color={mainColor}
         humidity={humidityVal}
       />
       <Condition
         types={selectedConditions}
-        color={color}
+        color={mainColor}
       />
     </div>
   );
