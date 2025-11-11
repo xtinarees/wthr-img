@@ -49,15 +49,6 @@ const temperatureControl = {
   'unit': String.fromCharCode(176) + 'F'
 }
 
-const humidityControl = {
-  'title': 'Humidity',
-  'name': 'humidity',
-  'min': '0',
-  'max': '100',
-  'step': '1',
-  'unit': String.fromCharCode(37)
-}
-
 const timeOptions = [
   { value: false, label: 'Day', slug: 'day' },
   { value: true, label: 'Night', slug: 'night' }
@@ -73,7 +64,6 @@ function Body() {
   const [isNight, setIsNight] = useState(false);
   const [selectedConditions, setSelectedConditions] = useState([]);
   const [rangeMoonPhase, setRangeMoonPhase] = useState(0);
-  const [rangeHumidityVal, setRangeHumidityVal] = useState(0);
   const [location, setLocation] = useState('');
   const [weather, setWeather] = useState('');
   const [temp, setTemp] = useState('');
@@ -101,7 +91,6 @@ function Body() {
             setLocation(loc);
             setWeather(result.data);
             setTemp(result.data.main.temp);
-            setRangeHumidityVal(result.data.main.humidity);
             setSelectedConditions(conditions);
             setIsNight(night);
           }
@@ -127,9 +116,6 @@ function Body() {
   const handleChangeMoonRange = (val) => {
     setRangeMoonPhase(val);
   }
-  const handleChangeHumidityRange = (val) => {
-    setRangeHumidityVal(val);
-  }
   const handleChangeTime = (val) => {
     setIsNight(val);
   };
@@ -145,8 +131,6 @@ function Body() {
   };
 
 
-  const isRainy = selectedConditions.includes('rainy');
-  const humidityVal = isRainy ? 100 : rangeHumidityVal;
   const controlsStyle = isControlsClosed ? {display:'none'} : {display: 'block'};
   const mainColor = getColor(temp, isNight);
   const isColorDark = tinycolor(mainColor).isDark();
@@ -171,19 +155,11 @@ function Body() {
             range={temp}
             updateRange={handleChangeTemperatureRange}
             settings={temperatureControl}
-            isDisabled={false}
           />
           <Range
             range={rangeMoonPhase}
             updateRange={handleChangeMoonRange}
             settings={moonPhaseControl}
-            isDisabled={false}
-          />
-          <Range 
-            range={humidityVal}
-            updateRange={handleChangeHumidityRange}
-            settings={humidityControl}
-            isDisabled={isRainy}
           />
           <ButtonGroup
             options={conditionOptions}
@@ -200,7 +176,6 @@ function Body() {
       <Moon
         phase={rangeMoonPhase}
         color={mainColor}
-        humidity={humidityVal}
       />
       <Condition
         types={selectedConditions}
