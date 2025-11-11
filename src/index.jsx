@@ -1,7 +1,16 @@
 import React from 'react';
 import tinycolor from 'tinycolor2'
-import axios from 'axios';
 import SunCalc  from 'suncalc';
+import { getLocation, getBackupLocation, getWeather, latLngString } from './setup.jsx';
+import { 
+  getColor,
+  getInitialMoonPhaseValue, 
+  getMoonGradientPercentages,
+  toPercentString
+} from './utils.jsx';
+import Precipitation from './components/Precipitation.jsx';
+import Night from "./components/Night.jsx";
+import Background from "./components/Background.jsx";
 import './index.css';
 
 
@@ -127,54 +136,10 @@ function ToggleButton(props) {
 
 
 
-
-
-/*
- * Initial Setup
- */
-function getLocation() {
-  if ("geolocation" in navigator) {
-    return new Promise(
-      (resolve, reject) => navigator.geolocation.getCurrentPosition(resolve, reject)
-    )
-  } else {
-    // geolocation is not supported
-    // get your location some other way
-    console.log('geolocation is not enabled on this browser');
-    return false;
-  }
-}
-
-
-function getBackupLocation() {
-  return axios.get("https://ipapi.co/json/");
-}
-
-
-function getWeather(location) {
-  let units = "&units=imperial";
-  let appid = "&APPID=" + import.meta.env.VITE_OPENWEATHERMAP_KEY;
-  
-  return axios.get("https://api.openweathermap.org/data/2.5/weather?" + location + units + appid);
-}
-
-
-function latLngString(lat, lng) {
-  return 'lat=' + lat + '&lon=' + lng;
-}
-
-
-
-
 /*
  * Output
  */
-function Background(props) {
-  const styles = { backgroundColor: tinycolor(props.color).toString() };
-  return (
-    <div className="background" style={styles}></div>
-  )
-}
+
 
 
 function BackgroundControls(props) {
@@ -192,13 +157,7 @@ function BackgroundControls(props) {
 }
 
 
-function Night(props) {
-  let styles = null;
-  if (!props.isNight) { styles = { display: 'none' }; }
-  return (
-    <div className="night" style={styles}></div>
-  )
-}
+
 
 
 /*
@@ -259,46 +218,6 @@ function Condition(props) {
 }
 
 
-function Precipitation(props) {
-  const backgroundColor = tinycolor(props.color).spin(180);
-  const css = `
-    .precipitation .rainy {
-      background-color: ${backgroundColor};
-    }`;
-
-  return props.types.map(function(precipType) {
-    return (
-      <div className="precipitation">
-        <style>{css}</style>
-        <PrecipitationItem types={props.types} precipType={precipType} />
-      </div> 
-    );
-  });
-}
-
-
-class PrecipitationItem extends React.Component {
-  shouldComponentUpdate(nextProps, nextState) {
-    return !arraysMatch(nextProps.types, this.props.types);
-  }
-  render() {
-    const precipType = this.props.precipType;
-    return Array(30).fill(1).map((el, i) => {
-      const sizeCSS = getRandomInt(2, 14) + 'vh';
-      const topCSS = getRandomInt(0, 100) + 'vh';
-      const leftCSS = getRandomInt(0, 100) + 'vw';
-      const styles = {
-        width: sizeCSS,
-        height: sizeCSS,
-        top: topCSS,
-        left: leftCSS,
-      };
-      return <div class={precipType} style={styles} value={i}></div>
-    });
-  }
-}
-
-
 function Clouds(props) {
   if (props.isCloudy) { return <div className="clouds"></div> }
   else { return null; }
@@ -350,132 +269,6 @@ function IconCircleMinus() {
   );
 }
 
-
-
-
-
-/*
- * Helper Functions
- */
-function arraysMatch(array1, array2) {
-  return array1.sort().join(',') === array2.sort().join(',');
-}
-
-
-function toPercentString(num) {
-  return num.toString() + '%';
-}
-
-
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-}
-
-
-function isEven(num) {
-  return num % 2 === 0;
-}
-
-
-function getMoonGradientPercentages(phase) {
-  let percent0 = 0;
-  let percent1 = 0;
-  let percent2 = 0;
-
-
-  if (phase >= 0.25 && phase <= 0.5) {
-    percent0 = 50 + ( (50 - (phase * 100)) * 2 );
-    percent1 = 0;
-    percent2 = 100;
-
-  } else if (phase > 0.5 && phase <= 0.75) {
-    percent0 = 50 - ( ((phase * 100) - 50) * 2);
-    percent1 = 0;
-    percent2 = 100;
-
-  } else if (phase < 0.25) {
-    percent0 = 0;
-    percent1 = (25 - (phase * 100)) * 4;
-    percent2 = 100;
-
-  } else if (phase > 0.75) {
-    percent0 = 100;
-    percent1 = ((phase * 100) - 75) * 4;
-    percent2 = 100;
-  }
-
-  return [percent0, percent1, percent2];
-}
-
-
-/*
- * Magenta: rgb(255, 0, 255) _________ 100, Section 0
- * B -
- * Red: rgb(255, 0, 0) _______________ 85, Section 1
- * G +
- * Yellow: rgb(255, 255, 0) __________ 70, Section 2
- * R -
- * Green: rgb(0, 255, 0) _____________ 55, Section 3
- * B +
- * Turquoise: rgb(0, 255, 255) _______ 40, Section 4
- * G -
- * Blue/Indigo: rgb(0, 0, 255) _______ 25, Section 5
- * R +
- */
-function getColorByTemp(temp) {
-  // split temp in 15 increments
-  var tempSpan = 15;
-  // hotest color = magenta
-  var color = {
-    r: 255,
-    g: 0,
-    b: 255
-  };
-
-  var colorMap = ['b', 'g', 'r', 'b', 'g'];
-  var colorSection = Math.ceil( (100 - temp) / tempSpan );
-
-  for (var i = 1; i <= colorSection; i++) {
-    // if super cold, less than 100 - (tempSpan * 5)
-    if (colorSection > 5) { color = {r:0, g:0, b:255}; break; }
-
-    // alternate between adding and subtracting RGB values
-    const isAdd = isEven(i);
-
-    // element that is getting changed
-    const RGorB = colorMap[i - 1];
-
-    // check if this is the last loop
-    const isLast = i === colorSection;
-    const remander = (100 - temp) % tempSpan;
-    const num = isLast && remander !== 0 ? (255 * remander) / tempSpan : 255;
-
-    // if even, add to element
-    // if odd, subtract
-    if (isAdd) {
-      color[RGorB] = color[RGorB] + num;
-    } else {
-      color[RGorB] = color[RGorB] - num;
-    }
-  }
-
-  return color;
-
-}
-
-
-function getInitialMoonPhaseValue(moonPhase) {
-  const moonPhasesStatic = [0.5, 0.75, 1, 0, 0.25];
-  if (moonPhasesStatic.includes(moonPhase)) { return moonPhase; }
-
-  if (moonPhase > 0 && moonPhase < 0.25) { return 0.125; }
-  if (moonPhase > 0.25 && moonPhase < 0.5) { return 0.375; }
-  if (moonPhase > 0.5 && moonPhase < 0.75) { return 0.625; }
-  if (moonPhase > 0.75 && moonPhase < 1) { return 0.875; }
-
-}
 
 
 class Body extends React.Component {
@@ -584,13 +377,12 @@ class Body extends React.Component {
 
 
   render() {
-    const { temp } = this.state;
-    const { rangeMoonPhase } = this.state;
+    const { temp, isNight, rangeMoonPhase } = this.state;
     const isRainy = this.state.selectedConditions.includes('rainy');
     const rangeHumidityVal = isRainy ? 100 : this.state.rangeHumidityVal;
     const controlsStyle = this.state.isControlsClosed ? {display:'none'} : {display: 'block'};
 
-    const color = getColorByTemp(this.state.temp);
+    const color = getColor(temp);
     const isColorDark = tinycolor(color).isDark();
     const contentColor = isColorDark ? 'white' : 'black';
     const contentStyle = { 'color': contentColor };
@@ -636,14 +428,17 @@ class Body extends React.Component {
               activeButtons={this.state.selectedConditions}
             />
             <ToggleButton
-              isActive={this.state.isNight}
+              isActive={isNight}
               handleChange={this.handleChangeTime}
               options={timeOptions}
             />
           </div>
         </div>
-
-        <Night isNight={this.state.isNight} />
+{/* 
+        <Night 
+          isNight={isNight} 
+          color={color}
+        /> */}
         <Moon
           phase={rangeMoonPhase}
           color={color}
