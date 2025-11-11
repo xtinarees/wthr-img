@@ -33,3 +33,4 @@ export const getWeather = (location) => {
 export const latLngString = (lat, lng) => {
   return 'lat=' + lat + '&lon=' + lng;
 }
+
