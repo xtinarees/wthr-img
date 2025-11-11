@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import tinycolor from 'tinycolor2'
 import axios from 'axios';
 import SunCalc  from 'suncalc';
-import keys from './keys.js';
 import './index.css';
 
 
@@ -155,7 +153,7 @@ function getBackupLocation() {
 
 function getWeather(location) {
   let units = "&units=imperial";
-  let appid = "&APPID=" + keys.openWeatherMap;
+  let appid = "&APPID=" + import.meta.env.VITE_OPENWEATHERMAP_KEY;
   
   return axios.get("https://api.openweathermap.org/data/2.5/weather?" + location + units + appid);
 }
@@ -660,10 +658,4 @@ class Body extends React.Component {
   }
 }
 
-
-// ========================================
-
-ReactDOM.render(
-  <Body />,
-  document.getElementById('root')
-);
+export default Body;
