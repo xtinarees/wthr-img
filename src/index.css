@@ -224,17 +224,6 @@ button:focus {
 /*------------------------------------*\
     #CONDITIONS
 \*------------------------------------*/
-.clouds {
-  z-index: 20;
-  position: fixed;
-  width: 50%;
-  height: 100%;
-  background-color: black;
-  opacity: 0.2;
-  top: 0;
-  left: 0;
-}
-
 .precipitation {
   position: absolute;
   width: 100%;

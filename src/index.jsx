@@ -55,7 +55,6 @@ const timeOptions = [
 ];
 
 const conditionOptions = [
-  { value: 'cloudy', label: 'Cloudy' },
   { value: 'rainy', label: 'Rainy' },
   { value: 'snowy', label: 'Snowy' }
 ];
@@ -85,7 +84,6 @@ function Body() {
           let night = true;
           if ( "rain" in result.data ) { conditions.push('rainy'); }
           if ( "snow" in result.data ) { conditions.push('snowy'); }
-          if ( ("clouds" in result.data) && result.data.clouds.all > 0) { conditions.push('cloudy'); }
           if (result.data.sys.sunrise < dateStamp && result.data.sys.sunset > dateStamp) { night = false; }
           if (isMounted) {
             setLocation(loc);
