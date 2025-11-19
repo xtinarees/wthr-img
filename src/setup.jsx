@@ -34,3 +34,12 @@ export const latLngString = (lat, lng) => {
   return 'lat=' + lat + '&lon=' + lng;
 }
 
+export const getInitialMoonPhaseValue = (moonPhase) => {
+  const moonPhasesStatic = [0.5, 0.75, 1, 0, 0.25];
+  if (moonPhasesStatic.includes(moonPhase)) { return moonPhase; }
+
+  if (moonPhase > 0 && moonPhase < 0.25) { return 0.125; }
+  if (moonPhase > 0.25 && moonPhase < 0.5) { return 0.375; }
+  if (moonPhase > 0.5 && moonPhase < 0.75) { return 0.625; }
+  if (moonPhase > 0.75 && moonPhase < 1) { return 0.875; }
+}

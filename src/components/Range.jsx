@@ -1,11 +1,13 @@
 import React from 'react';
+import tinycolor from 'tinycolor2';
 
-const Range = ({ range, updateRange, settings }) => {
+const Range = ({ colors, range, updateRange, settings, isNight }) => {
   const label = settings.options ? settings.options[range] : range;
   const unit = "unit" in settings ? settings.unit : '';
+  const accentColor = isNight ? colors.dark : colors.darker;
 
   return (
-    <div className="control">
+    <div className="control" >
       <div className="range__label-wrap">
         <label className="range__label" htmlFor={settings.name}>{settings.title}</label>
         <span className="range__number">{label}{unit}</span>
@@ -15,6 +17,7 @@ const Range = ({ range, updateRange, settings }) => {
         min={settings.min}
         max={settings.max}
         step={settings.step}
+        style={{ accentColor: accentColor }}
         onChange={e => updateRange(e.target.value)}
       />
     </div>

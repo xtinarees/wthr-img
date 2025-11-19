@@ -3,7 +3,7 @@ import tinycolor from 'tinycolor2';
 import { getRandomInt } from '../utils';
 
 
-function PrecipitationItem({ types, precipType }) {
+function PrecipitationItem({ types, precipType, color }) {
   // Memoize the drops so they don't change on every render unless types/precipType changes
   const drops = useMemo(() => {
     return Array(50).fill(1).map((el, i) => {
@@ -15,6 +15,7 @@ function PrecipitationItem({ types, precipType }) {
         height: sizeCSS,
         top: topCSS,
         left: leftCSS,
+        backgroundColor: precipType === "rainy" ? color : "white"
       };
       return <div className={precipType} style={styles} key={i}></div>;
     });
@@ -25,17 +26,11 @@ function PrecipitationItem({ types, precipType }) {
 
 function Precipitation({ types, color }) {
   const backgroundColor = tinycolor(color).lighten(10).spin(5);
-  const css = `
-    .precipitation .rainy {
-      background-color: ${backgroundColor};
-    }`;
-
   return (
     <>
       {types.map((precipType) => (
         <div className="precipitation" key={precipType}>
-          <style>{css}</style>
-          <PrecipitationItem types={types} precipType={precipType} />
+          <PrecipitationItem types={types} precipType={precipType} color={backgroundColor}/>
         </div>
       ))}
     </>

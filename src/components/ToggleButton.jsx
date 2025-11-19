@@ -1,13 +1,30 @@
 import React from 'react';
+import tinycolor from 'tinycolor2'
 
-const ToggleButton = ({ options, isActive, handleChange }) => {
+const ToggleButton = ({ 
+  options, 
+  isActive, 
+  handleChange, 
+  colors
+}) => {
+  const activeStyles = { 
+    background: colors.buttonBackground,
+    color: colors.buttonText,
+    borderColor: colors.content,
+    fontWeight: "bold"
+  };
   return (
-    <div className="control toggle-button">
+    <div className="toggle-buttons">
       {options.map(item => {
-        const activeClass = isActive === item.value ? 'is-active' : '';
-        const classNames = `${activeClass} button`;
+
         return (
-          <button className={classNames} key={item.slug} onClick={() => handleChange(item.value)}>{item.label}</button>
+          <button className="toggle-button"
+            key={item.slug} 
+            onClick={() => handleChange(item.value)}
+            style={isActive === item.value ? activeStyles : null}
+          >
+            {item.label}
+          </button>
         );
       })}
     </div>

@@ -109,18 +109,37 @@ export const getColorByTemp = (temp) => {
 }
 
 export const getColor = (temp, isNight) => {
-    const baseColor = getColorByTemp(temp);
-    return isNight ? tinycolor(baseColor).darken(20) : baseColor;
+  const baseColor = getColorByTemp(temp);
+  return isNight ? tinycolor(baseColor).darken(20) : baseColor;
 } 
 
+export const buildColorMap = ({temp, isNight}) => {
+  const rootColor = temp ? getColor(temp, isNight) : "#d3d3d3";
+  const lightColor =  tinycolor(rootColor).clone().lighten(15).toString();
+  const lighterColor = tinycolor(rootColor).clone().lighten(40).toString();
+  const lightestColor = tinycolor(rootColor).clone().lighten(60).toString();
+  const darkColor = tinycolor(rootColor).clone().darken(15).toString();
+  const darkerColor = tinycolor(rootColor).clone().darken(30).toString();
+  const darkestColor = tinycolor(rootColor).clone().darken(60).toString();
+  const isRootColorDark = tinycolor(rootColor).isDark();
+  const contentColor = isRootColorDark ? lighterColor : darkerColor;
+  const contentTextColor = isRootColorDark ? lightestColor : darkestColor;
+  const buttonTextColor = isRootColorDark ? darkColor : lighterColor;  
+  const gradient = isRootColorDark ? `linear-gradient(45deg, ${lightColor}, ${lighterColor})` : `linear-gradient(45deg, ${darkColor}, ${darkerColor})`;
 
-export const getInitialMoonPhaseValue = (moonPhase) => {
-  const moonPhasesStatic = [0.5, 0.75, 1, 0, 0.25];
-  if (moonPhasesStatic.includes(moonPhase)) { return moonPhase; }
-
-  if (moonPhase > 0 && moonPhase < 0.25) { return 0.125; }
-  if (moonPhase > 0.25 && moonPhase < 0.5) { return 0.375; }
-  if (moonPhase > 0.5 && moonPhase < 0.75) { return 0.625; }
-  if (moonPhase > 0.75 && moonPhase < 1) { return 0.875; }
+  return {
+    main: rootColor, 
+    light: lightColor,
+    lighter: lighterColor,
+    lightest: lightestColor,
+    dark: darkColor,
+    darker: darkerColor, 
+    darkestColor: darkestColor,
+    content: contentColor,
+    contentText: contentTextColor,
+    buttonText: buttonTextColor,
+    buttonBackground: gradient,
+    isDark: isRootColorDark
+  };
 
 }

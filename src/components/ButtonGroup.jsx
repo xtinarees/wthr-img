@@ -1,13 +1,26 @@
 import React from 'react';
 
-const ButtonGroup = ({ options, activeButtons, handleChange }) => {
+const ButtonGroup = ({ options, activeButtons, handleChange, colors }) => {
+  const activeStyles = { 
+    background: colors.buttonBackground,
+    color: colors.buttonText,
+    borderColor: colors.content,
+    fontWeight: "bold",
+    "&:hover": {
+      background: "blue"
+    },
+  };
   return (
     <div className="control button-group">
       {options.map((item, i) => {
-        const activeClass = activeButtons.includes(item.value) ? 'is-active' : '';
-        const classNames = `${activeClass} button`;
+        const isActive = activeButtons.includes(item.value);
         return (
-          <button className={classNames} key={i} onClick={() => handleChange(item.value)}>
+          <button 
+            className="button" 
+            key={i} 
+            onClick={() => handleChange(item.value)} 
+            style={isActive ? activeStyles : null}
+          >
             {item.label}
           </button>
         );

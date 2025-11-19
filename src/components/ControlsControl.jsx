@@ -1,10 +1,10 @@
-import React from 'react';
-import ControlsIcon from './ControlsIcon.jsx';
+import React from "react";
+import IconSlider from "./IconSlider.jsx";
 
 const ControlsControl = ({ handleChange, isClosed }) => (
-  <button className="controls__control" onClick={() => handleChange(!isClosed)}>
-    <ControlsIcon isClosed={isClosed} />
-    <span className="controls__text">Controls</span>
+  <button className="controls__header" onClick={() => handleChange(!isClosed)}>
+    <IconSlider className="controls__icon" />
+    <h2 className="controls__title">Settings</h2>
   </button>
 );
 

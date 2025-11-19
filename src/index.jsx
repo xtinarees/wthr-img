@@ -2,10 +2,15 @@ import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import tinycolor from 'tinycolor2'
 import SunCalc  from 'suncalc';
-import { getLocation, getBackupLocation, getWeather, latLngString } from './setup.jsx';
 import { 
-  getColor,
-  getInitialMoonPhaseValue, 
+  getLocation, 
+  getBackupLocation, 
+  getWeather, 
+  latLngString,
+  getInitialMoonPhaseValue 
+} from './setup.jsx';
+import { 
+  buildColorMap
 } from './utils.jsx';
 import Background from "./components/Background.jsx";
 import Range from "./components/Range.jsx";
@@ -55,26 +60,25 @@ const timeOptions = [
 ];
 
 const conditionOptions = [
-  { value: 'rainy', label: 'Rainy' },
-  { value: 'snowy', label: 'Snowy' }
+  { value: 'rainy', label: 'Rain' },
+  { value: 'snowy', label: 'Snow' }
 ];
 
 function Body() {
   const [isNight, setIsNight] = useState(false);
   const [selectedConditions, setSelectedConditions] = useState([]);
-  const [rangeMoonPhase, setRangeMoonPhase] = useState(0);
+  const [rangeMoonPhase, setRangeMoonPhase] = useState(0.5);
   const [location, setLocation] = useState('');
   const [weather, setWeather] = useState('');
   const [temp, setTemp] = useState('');
   const [isControlsClosed, setIsControlsClosed] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
     function setInitialWeatherState(result) {
       let date = new Date();
       let dateStamp = Math.floor(date.getTime()/1000);
       let moonPhase = SunCalc.getMoonIllumination(date).phase;
-      if (isMounted) setRangeMoonPhase(getInitialMoonPhaseValue(moonPhase));
+      setRangeMoonPhase(getInitialMoonPhaseValue(moonPhase));
       const lat = "coords" in result ? result.coords.latitude : result.data.latitude;
       const lng = "coords" in result ? result.coords.longitude : result.data.longitude;
       const loc = latLngString(lat, lng);
@@ -85,24 +89,18 @@ function Body() {
           if ( "rain" in result.data ) { conditions.push('rainy'); }
           if ( "snow" in result.data ) { conditions.push('snowy'); }
           if (result.data.sys.sunrise < dateStamp && result.data.sys.sunset > dateStamp) { night = false; }
-          if (isMounted) {
             setLocation(loc);
             setWeather(result.data);
             setTemp(result.data.main.temp);
             setSelectedConditions(conditions);
             setIsNight(night);
-          }
         })
-        .catch(function() {
-          if (isMounted) setTemp(100);
-        });
     }
     getLocation()
       .then(setInitialWeatherState)
       .catch(() => {
         getBackupLocation().then(setInitialWeatherState);
       });
-    return () => { isMounted = false; };
   }, []);
 
   const handleChangeControls = (closed) => {
@@ -128,56 +126,78 @@ function Body() {
     });
   };
 
+  const colors = buildColorMap({temp, isNight});
 
+  // const rootColor = temp ? getColor(temp, isNight) : "#d3d3d3";
+  // const colors.main = temp ? getColor(temp, isNight) : "#d3d3d3";
+
+  // const colors = {
+  //   main: rootColor, 
+  //   light: tinycolor(rootColor).clone().lighten(15).toString(),
+  //   lighter: tinycolor(rootColor).clone().lighten(40).toString(),
+  //   dark: tinycolor(rootColor).clone().darken(15).toString(),
+  //   darker: tinycolor(rootColor).clone().darken(30).toString()  
+  // };
+
+  // const isColorDark = tinycolor(colors.main).isDark();
+  // const contentColor = isColorDark ? colors.lighter : colors.darker;
   const controlsStyle = isControlsClosed ? {display:'none'} : {display: 'block'};
-  const mainColor = getColor(temp, isNight);
-  const isColorDark = tinycolor(mainColor).isDark();
-  const contentColor = isColorDark ? 'white' : 'black';
-  const contentStyle = { color: contentColor };
+
+  const contentStyle = { color: colors.content };
   let contentClasses = isControlsClosed ? 'is-closed-controls' : 'is-open-controls';
-  contentClasses += isColorDark ? ' is-dark-color' : ' is-light-color';
+  contentClasses += colors.isDark ? ' is-dark-color' : ' is-light-color';
   contentClasses += temp === '' ? ' is-loading' : '';
 
   return (
     <div className={'content ' + contentClasses} style={contentStyle}>
-      <Background color={mainColor} />
-      <BackgroundControls color={mainColor} />
+      <Background color={colors.main} />
+      <BackgroundControls color={colors.main} />
       <div className="controls">
-        <ControlsControl 
-          handleChange={handleChangeControls}
-          isClosed={isControlsClosed}
-        />
-        <div className="controls__content" style={controlsStyle}>
-          <p className="control">Initial results are based on your current weather and conditions. Change the controls below to create a new image.</p>
-          <Range
-            range={temp}
-            updateRange={handleChangeTemperatureRange}
-            settings={temperatureControl}
+        <div className="controls__inner">
+          <ControlsControl 
+            handleChange={handleChangeControls}
+            isClosed={isControlsClosed}
           />
-          <Range
-            range={rangeMoonPhase}
-            updateRange={handleChangeMoonRange}
-            settings={moonPhaseControl}
-          />
-          <ButtonGroup
-            options={conditionOptions}
-            handleChange={handleChangeCondition}
-            activeButtons={selectedConditions}
-          />
-          <ToggleButton
-            isActive={isNight}
-            handleChange={handleChangeTime}
-            options={timeOptions}
-          />
+          <div className="controls__content" style={controlsStyle}>
+            <p className="control control--info">
+              Initial results are based on your current weather and conditions. Change the settings below to create a new image.
+            </p>
+            <Range
+              colors={colors}
+              range={temp}
+              updateRange={handleChangeTemperatureRange}
+              settings={temperatureControl}
+              isNight={isNight}
+            />
+            <Range
+              colors={colors}
+              range={rangeMoonPhase}
+              updateRange={handleChangeMoonRange}
+              settings={moonPhaseControl}
+              isNight={isNight}
+            />
+            <ButtonGroup
+              options={conditionOptions}
+              handleChange={handleChangeCondition}
+              activeButtons={selectedConditions}
+              colors={colors}
+            />
+            <ToggleButton
+              isActive={isNight}
+              handleChange={handleChangeTime}
+              options={timeOptions}
+              colors={colors}
+            />
+          </div>
         </div>
       </div>
       <Moon
         phase={rangeMoonPhase}
-        color={mainColor}
+        color={colors.main}
       />
       <Condition
         types={selectedConditions}
-        color={mainColor}
+        color={colors.main}
       />
     </div>
   );

@@ -10,7 +10,9 @@ html {
   box-sizing: border-box;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   -webkit-box-sizing: inherit;
   -moz-box-sizing: inherit;
   box-sizing: inherit;
@@ -32,17 +34,39 @@ body {
   transition: linear background-color 0.3s;
 }
 
+.background:before {
+  content: "";
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 800px;
+  opacity: 0.12;
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
 .content {
   transition: opacity 0.3s;
 }
-.content.is-loading {
-  opacity: 0;
-  transition: opacity 0.3s;
+
+.content.is-loading .moon {
+  animation: fadeInOut 4s ease-in-out infinite;
 }
 
-
-
-
+@keyframes fadeInOut {
+  0% {
+    opacity: 0; /* Starts completely transparent */
+  }
+  50% {
+    opacity: 1; /* Fully visible at the midpoint */
+  }
+  100% {
+    opacity: 0; /* Ends completely transparent, ready to loop */
+  }
+}
 
 /*------------------------------------*\
     #CONTROLS
@@ -58,13 +82,17 @@ body {
 }
 
 .controls {
-  padding: 3em;
-  width: 340px;
+  /* padding: 3em; */
+  width: 300px;
   text-align: left;
 }
 
+.controls__inner {
+  padding: 20px;
+}
+
 .controls__background {
-  width: 390px;
+  width: 320px;
 }
 
 .controls__background-inner {
@@ -75,8 +103,12 @@ body {
   left: 0;
 }
 
-.controls__background--mobile { opacity: 0.6; }
-.is-closed-controls .controls__background { display: none; }
+.controls__background--mobile {
+  opacity: 0.6;
+}
+.is-closed-controls .controls__background {
+  display: none;
+}
 
 .controls__content {
   margin-top: 0.5em;
@@ -85,7 +117,7 @@ body {
   position: relative;
 }
 
-.controls__control {
+.controls__header {
   position: relative;
   display: flex;
   align-items: center;
@@ -94,46 +126,86 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   font-weight: bold;
+  flex: 0 0 auto;
+  justify-content: end;
 }
 
 .controls__icon {
-  width: 24px !important;
-  height: 24px !important;
-  stroke-width: 5;
+  width: 20px;
+  height: 20px;
   margin-right: 0.5em;
 }
 
-.controls__text { line-height: 24px; }
+.controls__title {
+  line-height: 24px;
+  letter-spacing: 0.1em;
+  font-size: inherit;
+  margin: 0;
+}
 
-.is-dark-color .icon__main { fill: white; }
-.is-dark-color .icon__accent { stroke: black; }
-.is-light-color .icon__main { fill: black; }
-.is-light-color .icon__accent { stroke: white; }
+.is-dark-color .icon__main {
+  fill: white;
+}
+.is-dark-color .icon__accent {
+  stroke: black;
+}
+.is-light-color .icon__main {
+  fill: black;
+}
+.is-light-color .icon__accent {
+  stroke: white;
+}
 
 .control {
   display: block;
   margin-bottom: 2em;
 }
 
-@media only screen and (max-width: 1200px) {
-  .controls { padding: 1em; }
-  .controls, .controls__background { width: 100%; }
-  .controls__content { display: none; }
-  .controls__background--desktop { display: none; }
-  .control { margin-bottom: 1em; }
+.control--info {
+  font-style: italic;
 }
 
-@media only screen and (min-width: 1200px) {
-  .is-closed-controls .controls__control { justify-content: flex-end; }
-  .controls__background--mobile { display: none; }
+@media only screen and (max-width: 600px) {
+  .controls {
+    width: 100%;
+    max-height: 100vh;
+    display: flex;
+    justify-content: center;
+  }
+  .controls__inner {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  /* .controls, .controls__background { width: 100%; } */
+  .controls__background {
+    width: 100%;
+  }
+  .controls__content {
+    display: none;
+  }
+  .controls__background--desktop {
+    display: none;
+  }
+  .control {
+    margin-bottom: 1em;
+  }
 }
 
-
-
+@media only screen and (min-width: 600px) {
+  .is-closed-controls .controls__header {
+    justify-content: flex-end;
+  }
+  .controls__background--mobile {
+    display: none;
+  }
+}
 
 /*------------------------------------*\
     #RANGE
 \*------------------------------------*/
+
 .range__number {
   display: block;
 }
@@ -151,11 +223,9 @@ body {
   font-weight: bold;
 }
 
-.range__input { width: 100%; }
-
-
-
-
+.range__input {
+  width: 100%;
+}
 
 /*------------------------------------*\
     #BUTTONS
@@ -170,7 +240,9 @@ button {
   color: inherit;
   line-height: 1;
   cursor: pointer;
-  transition: background 250ms ease-in-out, transform 150ms ease;
+  transition:
+    background 250ms ease-in-out,
+    transform 150ms ease;
   -webkit-appearance: none;
   -moz-appearance: none;
   flex: 1 1 0;
@@ -190,36 +262,43 @@ button:focus {
 .button {
   border: 1px solid;
   border-color: inherit;
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   text-align: center;
+  border-radius: 3px;
+  width: 100%;
 }
 
-.button-group .button { margin-right: 0.6rem; }
-.button-group .button:last-child { margin-right: 0; }
-
-.button:hover {
-  background: rgba(255, 255, 255, 0.5);
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 
-.is-dark-color .button.is-active {
-  background: white;
-  color: black;
-  border-color: white;
-}
-.is-light-color .button.is-active {
-  background: black;
-  color: white;
-  border-color: black;
-}
-
-.button-group,
-.toggle-button {
+/*------------------------------------*\
+    #TOGGLE BUTTON
+\*------------------------------------*/
+.toggle-buttons {
+  width: 100%;
   display: flex;
 }
 
+.toggle-button {
+  border: 1px solid;
+  border-color: inherit;
+  padding: 0.8rem 1rem;
+  text-align: center;
+}
 
+.toggle-button:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-right: none;
+}
 
-
+.toggle-button:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
 
 /*------------------------------------*\
     #CONDITIONS
@@ -247,11 +326,6 @@ button:focus {
   transition: all 0.2s;
 }
 
-
-
-
-
-
 /*------------------------------------*\
     #MOON
 \*------------------------------------*/
@@ -266,23 +340,36 @@ button:focus {
 
 .moon {
   border-radius: 50%;
-  width: 90vh;
-  height: 90vh;
 }
 
 .earth {
   border-radius: 50%;
-  width: 90vh;
-  height: 90vh;
   position: absolute;
   top: 0;
   left: 0;
 }
 
+@media (orientation: landscape) {
+  .moon {
+    width: 90vh;
+    height: 90vh;
+  }
+  .earth {
+    width: 90vh;
+    height: 90vh;
+  }
+}
 
-
-
-
+@media (orientation: portrait) {
+  .moon {
+    width: 90vw;
+    height: 90vw;
+  }
+  .earth {
+    width: 90vw;
+    height: 90vw;
+  }
+}
 
 /*------------------------------------*\
     #LIGHTNING
