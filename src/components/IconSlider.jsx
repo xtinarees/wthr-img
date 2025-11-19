@@ -1,6 +1,6 @@
 import React from "react";
 
-const IconSlider = ({ className }) => (
+const IconSlider = ({ className = "" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -8,9 +8,9 @@ const IconSlider = ({ className }) => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     className={`feather feather-sliders ${className}`}
   >
     <line x1="4" y1="21" x2="4" y2="14" />
