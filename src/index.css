@@ -101,6 +101,12 @@ body {
   width: 320px;
 }
 
+@media screen and (max-width: 600px) {
+  .controls__background {
+    width: 100%;
+  }
+}
+
 .controls__background-inner {
   position: absolute;
   width: 100%;
@@ -110,9 +116,6 @@ body {
   opacity: 0.8;
 }
 
-.controls__background--mobile {
-  opacity: 0.6;
-}
 .is-closed-controls .controls__background {
   display: none;
 }
