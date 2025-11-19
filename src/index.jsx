@@ -1,6 +1,5 @@
 import React from 'react';
-import { useState, useEffect, useCallback } from 'react';
-import tinycolor from 'tinycolor2'
+import { useState, useEffect } from 'react';
 import SunCalc  from 'suncalc';
 import { 
   getLocation, 
@@ -127,20 +126,6 @@ function Body() {
   };
 
   const colors = buildColorMap({temp, isNight});
-
-  // const rootColor = temp ? getColor(temp, isNight) : "#d3d3d3";
-  // const colors.main = temp ? getColor(temp, isNight) : "#d3d3d3";
-
-  // const colors = {
-  //   main: rootColor, 
-  //   light: tinycolor(rootColor).clone().lighten(15).toString(),
-  //   lighter: tinycolor(rootColor).clone().lighten(40).toString(),
-  //   dark: tinycolor(rootColor).clone().darken(15).toString(),
-  //   darker: tinycolor(rootColor).clone().darken(30).toString()  
-  // };
-
-  // const isColorDark = tinycolor(colors.main).isDark();
-  // const contentColor = isColorDark ? colors.lighter : colors.darker;
   const controlsStyle = isControlsClosed ? {display:'none'} : {display: 'block'};
 
   const contentStyle = { color: colors.content };

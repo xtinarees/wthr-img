@@ -82,7 +82,6 @@ body {
 }
 
 .controls {
-  /* padding: 3em; */
   width: 300px;
   text-align: left;
 }
@@ -178,7 +177,7 @@ body {
     flex-direction: column;
     overflow-y: auto;
   }
-  /* .controls, .controls__background { width: 100%; } */
+
   .controls__background {
     width: 100%;
   }
@@ -245,6 +244,7 @@ button {
     transform 150ms ease;
   -webkit-appearance: none;
   -moz-appearance: none;
+  appearance: none;
   flex: 1 1 0;
 }
 
@@ -330,7 +330,6 @@ button:focus {
     #MOON
 \*------------------------------------*/
 .moon-earth-wrapper {
-  position: relative;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -371,30 +370,4 @@ button:focus {
   }
 }
 
-/*------------------------------------*\
-    #LIGHTNING
-\*------------------------------------*/
-/*
-.lightning {
-  z-index: 50;
-  top: 0;
-  left: calc(50% - 2px);
-  position: absolute;
-}
 
-
-.lightning-strike {
-  width: 4px;
-  height: 100vh;
-  background-color: yellow;
-  position: absolute;
-  top: 0;
-}
-
-  .lightning-strike-1 {
-    transform: rotate(45deg);
-  }
-  .lightning-strike-2 {
-    transform: rotate(-45deg);
-  }
-*/
