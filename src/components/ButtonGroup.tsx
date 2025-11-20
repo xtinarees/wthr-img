@@ -1,8 +1,13 @@
-import React from 'react';
-import { ButtonGroupProps } from '../types';
+import React from "react";
+import { ButtonGroupProps } from "../types";
 
-const ButtonGroup = ({ options, activeButtons, handleChange, colors }: ButtonGroupProps): JSX.Element => {
-  const activeStyles = { 
+const ButtonGroup = ({
+  options,
+  activeButtons,
+  handleChange,
+  colors,
+}: ButtonGroupProps): JSX.Element => {
+  const activeStyles = {
     background: colors.buttonBackground,
     color: colors.buttonText,
     borderColor: colors.content,
@@ -14,10 +19,10 @@ const ButtonGroup = ({ options, activeButtons, handleChange, colors }: ButtonGro
       {options.map((item, i) => {
         const isActive = activeButtons.includes(item.value);
         return (
-          <button 
-            className="button" 
-            key={i} 
-            onClick={() => handleChange(item.value)} 
+          <button
+            className="button"
+            key={i}
+            onClick={() => handleChange(item.value)}
             style={isActive ? activeStyles : undefined}
           >
             {item.label}

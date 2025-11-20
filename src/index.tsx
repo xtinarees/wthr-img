@@ -8,7 +8,13 @@ import {
   getInitialMoonPhaseValue,
 } from "./setup";
 import { buildColorMap } from "./utils";
-import { RangeControlSettings, ButtonOption, ToggleOption, WeatherData, LocationResult } from "./types";
+import {
+  RangeControlSettings,
+  ButtonOption,
+  ToggleOption,
+  WeatherData,
+  LocationResult,
+} from "./types";
 import Background from "./components/Background";
 import Range from "./components/Range";
 import ButtonGroup from "./components/ButtonGroup";
@@ -70,20 +76,24 @@ function Body(): JSX.Element {
   const [isControlsClosed, setIsControlsClosed] = useState<boolean>(true);
 
   useEffect(() => {
-    function setInitialWeatherState(result: GeolocationPosition | { data: LocationResult['data'] }) {
+    function setInitialWeatherState(
+      result: GeolocationPosition | { data: LocationResult["data"] },
+    ) {
       const date = new Date();
       const dateStamp = Math.floor(date.getTime() / 1000);
       const moonPhase = SunCalc.getMoonIllumination(date).phase;
       setRangeMoonPhase(getInitialMoonPhaseValue(moonPhase));
-      
-      const lat = 'coords' in result ? result.coords.latitude : result.data.latitude;
-      const lng = 'coords' in result ? result.coords.longitude : result.data.longitude;
+
+      const lat =
+        "coords" in result ? result.coords.latitude : result.data.latitude;
+      const lng =
+        "coords" in result ? result.coords.longitude : result.data.longitude;
       const loc = latLngString(lat, lng);
-      
+
       getWeather(loc).then(function (result) {
         const conditions: string[] = [];
         let night = true;
-        
+
         if ("rain" in result.data) {
           conditions.push("rainy");
         }
@@ -96,7 +106,7 @@ function Body(): JSX.Element {
         ) {
           night = false;
         }
-        
+
         setLocation(loc);
         setWeather(result.data);
         setTemp(result.data.main.temp);
@@ -107,11 +117,9 @@ function Body(): JSX.Element {
 
     const locationPromise = getLocation();
     if (locationPromise) {
-      locationPromise
-        .then(setInitialWeatherState)
-        .catch(() => {
-          getBackupLocation().then(setInitialWeatherState);
-        });
+      locationPromise.then(setInitialWeatherState).catch(() => {
+        getBackupLocation().then(setInitialWeatherState);
+      });
     } else {
       getBackupLocation().then(setInitialWeatherState);
     }

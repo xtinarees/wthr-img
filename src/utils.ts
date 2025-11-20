@@ -1,12 +1,12 @@
-import tinycolor from 'tinycolor2';
-import { RGBColor, ColorMap } from './types';
+import tinycolor from "tinycolor2";
+import { RGBColor, ColorMap } from "./types";
 
 export const arraysMatch = (array1: string[], array2: string[]): boolean => {
-  return array1.sort().join(',') === array2.sort().join(',');
+  return array1.sort().join(",") === array2.sort().join(",");
 };
 
 export const toPercentString = (num: number): string => {
-  return num.toString() + '%';
+  return num.toString() + "%";
 };
 
 export const getRandomInt = (min: number, max: number): number => {
@@ -19,26 +19,28 @@ export const isEven = (num: number): boolean => {
   return num % 2 === 0;
 };
 
-export const getMoonGradientPercentages = (phase: number): [number, number, number] => {
+export const getMoonGradientPercentages = (
+  phase: number,
+): [number, number, number] => {
   let percent0 = 0;
   let percent1 = 0;
   let percent2 = 0;
 
   if (phase >= 0.25 && phase <= 0.5) {
-    percent0 = 50 + ((50 - (phase * 100)) * 2);
+    percent0 = 50 + (50 - phase * 100) * 2;
     percent1 = 0;
     percent2 = 100;
   } else if (phase > 0.5 && phase <= 0.75) {
-    percent0 = 50 - (((phase * 100) - 50) * 2);
+    percent0 = 50 - (phase * 100 - 50) * 2;
     percent1 = 0;
     percent2 = 100;
   } else if (phase < 0.25) {
     percent0 = 0;
-    percent1 = (25 - (phase * 100)) * 4;
+    percent1 = (25 - phase * 100) * 4;
     percent2 = 100;
   } else if (phase > 0.75) {
     percent0 = 100;
-    percent1 = ((phase * 100) - 75) * 4;
+    percent1 = (phase * 100 - 75) * 4;
     percent2 = 100;
   }
 
@@ -66,10 +68,10 @@ export const getColorByTemp = (temp: number): tinycolor.Instance => {
   let color: RGBColor = {
     r: 255,
     g: 0,
-    b: 255
+    b: 255,
   };
 
-  const colorMap: (keyof RGBColor)[] = ['b', 'g', 'r', 'b', 'g'];
+  const colorMap: (keyof RGBColor)[] = ["b", "g", "r", "b", "g"];
   const colorSection = Math.ceil((100 - temp) / tempSpan);
 
   for (let i = 1; i <= colorSection; i++) {
@@ -102,13 +104,24 @@ export const getColorByTemp = (temp: number): tinycolor.Instance => {
   return tinycolor(color).desaturate(80);
 };
 
-export const getColor = (temp: number, isNight: boolean): tinycolor.Instance => {
+export const getColor = (
+  temp: number,
+  isNight: boolean,
+): tinycolor.Instance => {
   const baseColor = getColorByTemp(temp);
   return isNight ? tinycolor(baseColor).darken(20) : baseColor;
 };
 
-export const buildColorMap = ({ temp, isNight }: { temp: number | string; isNight: boolean }): ColorMap => {
-  const rootColor = temp ? getColor(Number(temp), isNight) : tinycolor("#d3d3d3");
+export const buildColorMap = ({
+  temp,
+  isNight,
+}: {
+  temp: number | string;
+  isNight: boolean;
+}): ColorMap => {
+  const rootColor = temp
+    ? getColor(Number(temp), isNight)
+    : tinycolor("#d3d3d3");
   const lightColor = tinycolor(rootColor).clone().lighten(15).toString();
   const lighterColor = tinycolor(rootColor).clone().lighten(40).toString();
   const lightestColor = tinycolor(rootColor).clone().lighten(60).toString();
@@ -119,8 +132,8 @@ export const buildColorMap = ({ temp, isNight }: { temp: number | string; isNigh
   const contentColor = isRootColorDark ? lighterColor : darkerColor;
   const contentTextColor = isRootColorDark ? lightestColor : darkestColor;
   const buttonTextColor = isRootColorDark ? darkColor : lighterColor;
-  const gradient = isRootColorDark 
-    ? `linear-gradient(45deg, ${lightColor}, ${lighterColor})` 
+  const gradient = isRootColorDark
+    ? `linear-gradient(45deg, ${lightColor}, ${lighterColor})`
     : `linear-gradient(45deg, ${darkColor}, ${darkerColor})`;
 
   return {
@@ -135,6 +148,6 @@ export const buildColorMap = ({ temp, isNight }: { temp: number | string; isNigh
     contentText: contentTextColor,
     buttonText: buttonTextColor,
     buttonBackground: gradient,
-    isDark: isRootColorDark
+    isDark: isRootColorDark,
   };
 };

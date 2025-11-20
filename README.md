@@ -33,4 +33,3 @@ npm run preview
 - `src/` - Source code
 - `public/` - Static assets and HTML template
 - `vite.config.ts` - Vite configuration
-
