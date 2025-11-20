@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import SunCalc from "suncalc";
 import {
   getLocation,
@@ -7,41 +6,42 @@ import {
   getWeather,
   latLngString,
   getInitialMoonPhaseValue,
-} from "./setup.jsx";
-import { buildColorMap } from "./utils.jsx";
-import Background from "./components/Background.jsx";
-import Range from "./components/Range.jsx";
-import ButtonGroup from "./components/ButtonGroup.jsx";
-import ToggleButton from "./components/ToggleButton.jsx";
-import BackgroundControls from "./components/BackgroundControls.jsx";
-import Moon from "./components/Moon.jsx";
-import Condition from "./components/Condition.jsx";
-import ControlsControl from "./components/ControlsControl.jsx";
+} from "./setup";
+import { buildColorMap } from "./utils";
+import { RangeControlSettings, ButtonOption, ToggleOption, WeatherData, LocationResult } from "./types";
+import Background from "./components/Background";
+import Range from "./components/Range";
+import ButtonGroup from "./components/ButtonGroup";
+import ToggleButton from "./components/ToggleButton";
+import BackgroundControls from "./components/BackgroundControls";
+import Moon from "./components/Moon";
+import Condition from "./components/Condition";
+import ControlsControl from "./components/ControlsControl";
 import "./index.css";
 
 /*
  * Set Global Constants
  */
-const moonPhaseControl = {
+const moonPhaseControl: RangeControlSettings = {
   title: "Moon Phase",
   name: "moonRange",
   min: "0",
   max: "1",
   step: "0.125",
   options: {
-    0.5: "Full",
-    0.625: "Waning Gibbus",
-    0.75: "Third Quarter",
-    0.875: "Waning Crescent",
-    1: "New",
-    0: "New",
-    0.125: "Waxing Crescent",
-    0.25: "First Quarter",
-    0.375: "Waxing Gibbus",
+    "0.5": "Full",
+    "0.625": "Waning Gibbus",
+    "0.75": "Third Quarter",
+    "0.875": "Waning Crescent",
+    "1": "New",
+    "0": "New",
+    "0.125": "Waxing Crescent",
+    "0.25": "First Quarter",
+    "0.375": "Waxing Gibbus",
   },
 };
 
-const temperatureControl = {
+const temperatureControl: RangeControlSettings = {
   title: "Temperature",
   name: "temperatureRange",
   min: "20",
@@ -50,39 +50,40 @@ const temperatureControl = {
   unit: String.fromCharCode(176) + "F",
 };
 
-const timeOptions = [
+const timeOptions: ToggleOption[] = [
   { value: false, label: "Day", slug: "day" },
   { value: true, label: "Night", slug: "night" },
 ];
 
-const conditionOptions = [
+const conditionOptions: ButtonOption[] = [
   { value: "rainy", label: "Rain" },
   { value: "snowy", label: "Snow" },
 ];
 
-function Body() {
-  const [isNight, setIsNight] = useState(false);
-  const [selectedConditions, setSelectedConditions] = useState([]);
-  const [rangeMoonPhase, setRangeMoonPhase] = useState(0.5);
-  const [location, setLocation] = useState("");
-  const [weather, setWeather] = useState("");
-  const [temp, setTemp] = useState("");
-  const [isControlsClosed, setIsControlsClosed] = useState(true);
+function Body(): JSX.Element {
+  const [isNight, setIsNight] = useState<boolean>(false);
+  const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
+  const [rangeMoonPhase, setRangeMoonPhase] = useState<number>(0.5);
+  const [location, setLocation] = useState<string>("");
+  const [weather, setWeather] = useState<WeatherData | "">("");
+  const [temp, setTemp] = useState<number | "">("");
+  const [isControlsClosed, setIsControlsClosed] = useState<boolean>(true);
 
   useEffect(() => {
-    function setInitialWeatherState(result) {
-      let date = new Date();
-      let dateStamp = Math.floor(date.getTime() / 1000);
-      let moonPhase = SunCalc.getMoonIllumination(date).phase;
+    function setInitialWeatherState(result: GeolocationPosition | { data: LocationResult['data'] }) {
+      const date = new Date();
+      const dateStamp = Math.floor(date.getTime() / 1000);
+      const moonPhase = SunCalc.getMoonIllumination(date).phase;
       setRangeMoonPhase(getInitialMoonPhaseValue(moonPhase));
-      const lat =
-        "coords" in result ? result.coords.latitude : result.data.latitude;
-      const lng =
-        "coords" in result ? result.coords.longitude : result.data.longitude;
+      
+      const lat = 'coords' in result ? result.coords.latitude : result.data.latitude;
+      const lng = 'coords' in result ? result.coords.longitude : result.data.longitude;
       const loc = latLngString(lat, lng);
+      
       getWeather(loc).then(function (result) {
-        let conditions = [];
+        const conditions: string[] = [];
         let night = true;
+        
         if ("rain" in result.data) {
           conditions.push("rainy");
         }
@@ -95,6 +96,7 @@ function Body() {
         ) {
           night = false;
         }
+        
         setLocation(loc);
         setWeather(result.data);
         setTemp(result.data.main.temp);
@@ -102,27 +104,36 @@ function Body() {
         setIsNight(night);
       });
     }
-    getLocation()
-      .then(setInitialWeatherState)
-      .catch(() => {
-        getBackupLocation().then(setInitialWeatherState);
-      });
+
+    const locationPromise = getLocation();
+    if (locationPromise) {
+      locationPromise
+        .then(setInitialWeatherState)
+        .catch(() => {
+          getBackupLocation().then(setInitialWeatherState);
+        });
+    } else {
+      getBackupLocation().then(setInitialWeatherState);
+    }
   }, []);
 
-  const handleChangeControls = (closed) => {
+  const handleChangeControls = (closed: boolean): void => {
     setIsControlsClosed(closed);
   };
-  const handleChangeTemperatureRange = (val) => {
-    setTemp(val);
+
+  const handleChangeTemperatureRange = (val: string): void => {
+    setTemp(Number(val));
   };
-  const handleChangeMoonRange = (val) => {
-    setRangeMoonPhase(val);
+
+  const handleChangeMoonRange = (val: string): void => {
+    setRangeMoonPhase(Number(val));
   };
-  const handleChangeTime = (val) => {
+
+  const handleChangeTime = (val: boolean): void => {
     setIsNight(val);
   };
 
-  const handleChangeCondition = (selectedCondition) => {
+  const handleChangeCondition = (selectedCondition: string): void => {
     setSelectedConditions((prev) => {
       if (prev.includes(selectedCondition)) {
         return prev.filter((item) => item !== selectedCondition);

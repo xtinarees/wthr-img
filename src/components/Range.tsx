@@ -1,8 +1,9 @@
 import React from 'react';
 import tinycolor from 'tinycolor2';
+import { RangeProps } from '../types';
 
-const Range = ({ colors, range, updateRange, settings, isNight }) => {
-  const label = settings.options ? settings.options[range] : range;
+const Range = ({ colors, range, updateRange, settings, isNight }: RangeProps): JSX.Element => {
+  const label = settings.options ? settings.options[range.toString()] : range;
   const unit = "unit" in settings ? settings.unit : '';
   const accentColor = isNight ? colors.dark : colors.darker;
 

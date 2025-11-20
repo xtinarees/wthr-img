@@ -1,15 +1,14 @@
 import React from 'react';
+import { ButtonGroupProps } from '../types';
 
-const ButtonGroup = ({ options, activeButtons, handleChange, colors }) => {
+const ButtonGroup = ({ options, activeButtons, handleChange, colors }: ButtonGroupProps): JSX.Element => {
   const activeStyles = { 
     background: colors.buttonBackground,
     color: colors.buttonText,
     borderColor: colors.content,
-    fontWeight: "bold",
-    "&:hover": {
-      background: "blue"
-    },
+    fontWeight: "bold" as const,
   };
+
   return (
     <div className="control button-group">
       {options.map((item, i) => {
@@ -19,7 +18,7 @@ const ButtonGroup = ({ options, activeButtons, handleChange, colors }) => {
             className="button" 
             key={i} 
             onClick={() => handleChange(item.value)} 
-            style={isActive ? activeStyles : null}
+            style={isActive ? activeStyles : undefined}
           >
             {item.label}
           </button>
