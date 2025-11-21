@@ -1,8 +1,10 @@
-import React from "react";
 import Precipitation from "./Precipitation.jsx";
-
-const Condition = ({ types, color }) => {
-  const precips = types.filter((n) => ["snowy", "rainy"].includes(n));
+/**
+ * Could be extended to support other "conditions" such as
+ * Cloudy, Lightning, etc.
+ */
+const Condition = ({ types, color }: { types: string[]; color: string }) => {
+  const precips = types.filter((n: string) => ["snowy", "rainy"].includes(n));
   return (
     <div>
       <Precipitation types={precips} color={color} />

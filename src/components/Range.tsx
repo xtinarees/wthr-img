@@ -1,6 +1,12 @@
-import React from "react";
-import tinycolor from "tinycolor2";
-import { RangeProps } from "../types";
+import { ColorMap, RangeControlSettings } from "../types";
+
+interface RangeProps {
+  colors: ColorMap;
+  range: number | string;
+  updateRange: (value: string) => void;
+  settings: RangeControlSettings;
+  isNight: boolean;
+}
 
 const Range = ({
   colors,
@@ -8,7 +14,7 @@ const Range = ({
   updateRange,
   settings,
   isNight,
-}: RangeProps): JSX.Element => {
+}: RangeProps) => {
   const label = settings.options ? settings.options[range.toString()] : range;
   const unit = "unit" in settings ? settings.unit : "";
   const accentColor = isNight ? colors.dark : colors.darker;

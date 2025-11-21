@@ -1,5 +1,5 @@
 import tinycolor from "tinycolor2";
-import { RGBColor, ColorMap } from "./types";
+import { ColorMap } from "./types";
 
 export const arraysMatch = (array1: string[], array2: string[]): boolean => {
   return array1.sort().join(",") === array2.sort().join(",");
@@ -61,17 +61,18 @@ export const getMoonGradientPercentages = (
  * Blue/Indigo: rgb(0, 0, 255) _______ 25, Section 5
  * R +
  */
+type colorMapOptions = "r" | "g" | "b";
 export const getColorByTemp = (temp: number): tinycolor.Instance => {
   // split temp in 15 increments
   const tempSpan = 15;
   // hottest color = magenta
-  let color: RGBColor = {
+  let color = {
     r: 255,
     g: 0,
     b: 255,
   };
 
-  const colorMap: (keyof RGBColor)[] = ["b", "g", "r", "b", "g"];
+  const colorMap: colorMapOptions[] = ["b", "g", "r", "b", "g"];
   const colorSection = Math.ceil((100 - temp) / tempSpan);
 
   for (let i = 1; i <= colorSection; i++) {

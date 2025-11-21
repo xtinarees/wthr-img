@@ -1,12 +1,18 @@
-import React from "react";
-import { ButtonGroupProps } from "../types";
+import { ButtonOption, ColorMap } from "../types";
+
+interface ButtonGroupProps {
+  options: ButtonOption[];
+  handleChange: (value: string) => void;
+  activeButtons: string[];
+  colors: ColorMap;
+}
 
 const ButtonGroup = ({
   options,
   activeButtons,
   handleChange,
   colors,
-}: ButtonGroupProps): JSX.Element => {
+}: ButtonGroupProps) => {
   const activeStyles = {
     background: colors.buttonBackground,
     color: colors.buttonText,

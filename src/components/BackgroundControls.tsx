@@ -1,11 +1,10 @@
-import React from "react";
 import tinycolor from "tinycolor2";
 
 /**
  * Manage background styles for controls panel
  * inside of div in order to control opacity independently
  */
-const BackgroundControls = ({ color }) => {
+const BackgroundControls = ({ color }: { color: string }) => {
   const colorStr = tinycolor(color).toString();
   const gradient = `linear-gradient(to right, rgba(255,0,0,0), ${colorStr}, ${colorStr})`;
 

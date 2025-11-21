@@ -1,9 +1,12 @@
-import React from "react";
 import tinycolor from "tinycolor2";
 import { getMoonGradientPercentages, toPercentString } from "../utils";
-import { MoonProps } from "../types";
 
-const Moon = ({ phase, color }: MoonProps): JSX.Element => {
+interface MoonProps {
+  phase: number;
+  color: string;
+}
+
+const Moon = ({ phase, color }: MoonProps) => {
   const phaseNum = parseFloat(phase.toString());
   const earthOrMoonGradient =
     phaseNum < 0.25 || phaseNum > 0.75 ? "earth" : "moon";

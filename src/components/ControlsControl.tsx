@@ -1,8 +1,12 @@
-import React from "react";
 import IconSlider from "./IconSlider.jsx";
 import IconClose from "./IconClose.jsx";
 
-const ControlsControl = ({ handleChange, isClosed }) => (
+interface ControlsControlProps {
+  handleChange: (isClosed: boolean) => void;
+  isClosed: boolean;
+}
+
+const ControlsControl = ({ handleChange, isClosed }: ControlsControlProps) => (
   <button className="controls__header" onClick={() => handleChange(!isClosed)}>
     {isClosed ? (
       <IconSlider className="controls__icon" />
