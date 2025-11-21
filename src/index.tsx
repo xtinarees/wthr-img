@@ -23,7 +23,6 @@ import BackgroundControls from "./components/BackgroundControls";
 import Moon from "./components/Moon";
 import Condition from "./components/Condition";
 import ControlsControl from "./components/ControlsControl";
-import "./index.css";
 
 const Body = () => {
   const [isNight, setIsNight] = useState<boolean>(false);

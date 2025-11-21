@@ -1,0 +1,20 @@
+.precipitation {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  overflow: hidden;
+}
+.rainy {
+  position: absolute;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+.snowy {
+  position: absolute;
+  transform: rotate(45deg);
+  background-color: white;
+  transition: all 0.2s;
+}

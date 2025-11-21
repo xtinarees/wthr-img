@@ -1,0 +1,19 @@
+.toggle-buttons {
+  width: 100%;
+  display: flex;
+}
+.toggle-button {
+  border: 1px solid;
+  border-color: inherit;
+  padding: 0.8rem 1rem;
+  text-align: center;
+}
+.toggle-button:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-right: none;
+}
+.toggle-button:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}

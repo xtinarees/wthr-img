@@ -1,5 +1,6 @@
 import tinycolor from "tinycolor2";
 import { getMoonGradientPercentages, toPercentString } from "../utils";
+import styles from "./Moon.module.css";
 
 interface MoonProps {
   phase: number;
@@ -32,9 +33,9 @@ const Moon = ({ phase, color }: MoonProps) => {
     earthOrMoonGradient === "earth" ? "block" : "none";
 
   return (
-    <div className="moon-earth-wrapper">
-      <div className="moon" style={moonStyles}></div>
-      <div className="earth" style={earthStyles}></div>
+    <div className={styles["moon-earth-wrapper"]}>
+      <div className={styles["moon"]} style={moonStyles}></div>
+      <div className={styles["earth"]} style={earthStyles}></div>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import tinycolor from "tinycolor2";
 import PrecipitationItem from "./PrecipitationItem";
 import { ConditionValues } from "../types";
+import styles from "./Precipitation.module.css";
 
 interface PrecipitationProps {
   types: string[];
@@ -12,7 +13,7 @@ function Precipitation({ types, color }: PrecipitationProps) {
   return (
     <>
       {types.map((precipType) => (
-        <div className="precipitation" key={precipType}>
+        <div className={styles["precipitation"]} key={precipType}>
           <PrecipitationItem
             types={types}
             precipType={precipType as ConditionValues}

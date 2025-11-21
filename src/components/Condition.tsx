@@ -1,4 +1,5 @@
 import Precipitation from "./Precipitation.jsx";
+import styles from "./Condition.module.css";
 /**
  * Could be extended to support other "conditions" such as
  * Cloudy, Lightning, etc.
@@ -6,7 +7,7 @@ import Precipitation from "./Precipitation.jsx";
 const Condition = ({ types, color }: { types: string[]; color: string }) => {
   const precips = types.filter((n: string) => ["snowy", "rainy"].includes(n));
   return (
-    <div>
+    <div className={styles["content"]}>
       <Precipitation types={precips} color={color} />
     </div>
   );

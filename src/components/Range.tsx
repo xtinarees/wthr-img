@@ -1,4 +1,5 @@
 import { ColorMap, RangeControlSettings } from "../types";
+import styles from "./Range.module.css";
 
 interface RangeProps {
   colors: ColorMap;
@@ -20,18 +21,18 @@ const Range = ({
   const accentColor = isNight ? colors.dark : colors.darker;
 
   return (
-    <div className="control">
-      <div className="range__label-wrap">
-        <label className="range__label" htmlFor={settings.name}>
+    <div className={styles["control"]}>
+      <div className={styles["range__label-wrap"]}>
+        <label className={styles["range__label"]} htmlFor={settings.name}>
           {settings.title}
         </label>
-        <span className="range__number">
+        <span className={styles["range__number"]}>
           {label}
           {unit}
         </span>
       </div>
       <input
-        className="range__input"
+        className={styles["range__input"]}
         id="range"
         type="range"
         name={settings.name}

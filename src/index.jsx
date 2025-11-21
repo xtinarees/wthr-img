@@ -17,7 +17,7 @@ import BackgroundControls from "./components/BackgroundControls";
 import Moon from "./components/Moon";
 import Condition from "./components/Condition";
 import ControlsControl from "./components/ControlsControl";
-import "./index.css";
+import styles from "./index.module.css";
 
 /*
  * Set Global Constants
@@ -145,7 +145,7 @@ function Body() {
   contentClasses += temp === "" ? " is-loading" : "";
 
   return (
-    <div className={"content " + contentClasses} style={contentStyle}>
+    <div className={styles.content + " " + contentClasses} style={contentStyle}>
       <Background color={colors.main} />
       <BackgroundControls color={colors.main} />
       <div className="controls">

@@ -1,4 +1,5 @@
 import tinycolor from "tinycolor2";
+import styles from "./BackgroundControls.module.css";
 
 /**
  * Manage background styles for controls panel
@@ -8,11 +9,11 @@ const BackgroundControls = ({ color }: { color: string }) => {
   const colorStr = tinycolor(color).toString();
   const gradient = `linear-gradient(to right, rgba(255,0,0,0), ${colorStr}, ${colorStr})`;
 
-  const styles = { backgroundImage: gradient };
+  const bgStyle = { backgroundImage: gradient };
 
   return (
-    <div className="controls__background">
-      <div className="controls__background-inner" style={styles}></div>
+    <div className={styles.controls__background}>
+      <div className={styles.controls__backgroundInner} style={bgStyle}></div>
     </div>
   );
 };

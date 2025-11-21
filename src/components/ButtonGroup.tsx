@@ -1,4 +1,5 @@
 import { ButtonOption, ColorMap } from "../types";
+import styles from "./ButtonGroup.module.css";
 
 interface ButtonGroupProps {
   options: ButtonOption[];
@@ -21,12 +22,12 @@ const ButtonGroup = ({
   };
 
   return (
-    <div className="control button-group">
+    <div className={styles["button-group"]}>
       {options.map((item, i) => {
         const isActive = activeButtons.includes(item.value);
         return (
           <button
-            className="button"
+            className={styles["button"]}
             key={i}
             onClick={() => handleChange(item.value)}
             style={isActive ? activeStyles : undefined}

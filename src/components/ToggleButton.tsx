@@ -1,4 +1,5 @@
 import { ToggleOption, ColorMap } from "../types";
+import styles from "./ToggleButton.module.css";
 
 interface ToggleButtonProps {
   isActive: boolean;
@@ -19,11 +20,11 @@ const ToggleButton = ({
     fontWeight: "bold",
   };
   return (
-    <div className="toggle-buttons">
+    <div className={styles["toggle-buttons"]}>
       {options.map((item) => {
         return (
           <button
-            className="toggle-button"
+            className={styles["toggle-button"]}
             key={item.slug}
             onClick={() => handleChange(item.value)}
             style={isActive === item.value ? activeStyles : {}}
