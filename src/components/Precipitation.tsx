@@ -13,7 +13,7 @@ function Precipitation({ types, color }: PrecipitationProps) {
   return (
     <>
       {types.map((precipType) => (
-        <div className={styles["precipitation"]} key={precipType}>
+        <div className={styles.precipitation} key={precipType}>
           <PrecipitationItem
             types={types}
             precipType={precipType as ConditionValues}

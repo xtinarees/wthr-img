@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { getRandomInt } from "../utils";
 import { ConditionValues } from "../types";
+import styles from "./PrecipitationItem.module.css";
 
 interface PrecipitationItemProps {
   types: string[];
@@ -13,6 +14,14 @@ const PrecipitationItem = ({
   precipType,
   color,
 }: PrecipitationItemProps) => {
+  const getClassName = (precipType: ConditionValues) => {
+    if (precipType === "rainy") {
+      return styles.rainy;
+    } else if (precipType === "snowy") {
+      return styles.snowy;
+    }
+    return "";
+  };
   // Memoize the drops so they don't change on every render unless types/precipType changes
   const drops = useMemo(() => {
     return Array(50)
@@ -28,7 +37,13 @@ const PrecipitationItem = ({
           left: leftCSS,
           backgroundColor: precipType === "rainy" ? color : "white",
         };
-        return <div className={precipType} style={styles} key={i}></div>;
+        return (
+          <div
+            className={getClassName(precipType)}
+            style={styles}
+            key={i}
+          ></div>
+        );
       });
   }, [types, precipType]);
 

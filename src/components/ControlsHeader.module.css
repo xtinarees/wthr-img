@@ -1,0 +1,33 @@
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: bold;
+  flex: 0 0 auto;
+  justify-content: end;
+  transition: filter 0.2s linear;
+}
+.eader:hover {
+  filter: brightness(0.7);
+  transition: filter 0.2s linear;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.5em;
+}
+.title {
+  line-height: 24px;
+  letter-spacing: 0.1em;
+  font-size: inherit;
+  margin: 0;
+}
+@media screen and (max-width: 600px) {
+  .title {
+    display: none;
+  }
+}

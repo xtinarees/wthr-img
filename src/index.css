@@ -116,10 +116,6 @@ body {
   opacity: 0.8;
 }
 
-.is-closed-controls .controls__background {
-  display: none;
-}
-
 .controls__content {
   margin-top: 0.5em;
   border-top: 2px dotted;

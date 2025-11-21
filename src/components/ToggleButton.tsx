@@ -20,11 +20,11 @@ const ToggleButton = ({
     fontWeight: "bold",
   };
   return (
-    <div className={styles["toggle-buttons"]}>
+    <div className={styles.wrapper}>
       {options.map((item) => {
         return (
           <button
-            className={styles["toggle-button"]}
+            className={styles.button}
             key={item.slug}
             onClick={() => handleChange(item.value)}
             style={isActive === item.value ? activeStyles : {}}

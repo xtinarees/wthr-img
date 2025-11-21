@@ -1,16 +1,17 @@
-.range__number {
+.range {
+  margin-bottom: 2em;
+}
+.number {
   display: block;
 }
-.range__footer {
-  font-size: 12px;
-}
-.range__label-wrap {
+
+.labelWrap {
   display: flex;
   justify-content: space-between;
 }
-.range__label {
+.label {
   font-weight: bold;
 }
-.range__input {
+.input {
   width: 100%;
 }

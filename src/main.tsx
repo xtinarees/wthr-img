@@ -1,7 +1,6 @@
-
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Body from "./index";
+import Body from "./index.tsx";
 import "./global.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

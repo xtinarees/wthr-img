@@ -21,18 +21,18 @@ const Range = ({
   const accentColor = isNight ? colors.dark : colors.darker;
 
   return (
-    <div className={styles["control"]}>
-      <div className={styles["range__label-wrap"]}>
-        <label className={styles["range__label"]} htmlFor={settings.name}>
+    <div className={styles.range}>
+      <div className={styles.labelWrap}>
+        <label className={styles.label} htmlFor={settings.name}>
           {settings.title}
         </label>
-        <span className={styles["range__number"]}>
+        <span className={styles.number}>
           {label}
           {unit}
         </span>
       </div>
       <input
-        className={styles["range__input"]}
+        className={styles.input}
         id="range"
         type="range"
         name={settings.name}

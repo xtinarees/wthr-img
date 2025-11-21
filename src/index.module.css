@@ -1,32 +1,3 @@
 .content {
   transition: opacity 0.3s;
 }
-.is-loading .moon {
-  animation: fadeInOut 4s ease-in-out infinite;
-}
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-.is-closed-controls .controls__background {
-  display: none;
-}
-.is-dark-color .icon__main {
-  fill: white;
-}
-.is-dark-color .icon__accent {
-  stroke: black;
-}
-.is-light-color .icon__main {
-  fill: black;
-}
-.is-light-color .icon__accent {
-  stroke: white;
-}

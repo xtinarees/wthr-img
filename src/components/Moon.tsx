@@ -5,9 +5,10 @@ import styles from "./Moon.module.css";
 interface MoonProps {
   phase: number;
   color: string;
+  isLoading: boolean;
 }
 
-const Moon = ({ phase, color }: MoonProps) => {
+const Moon = ({ phase, color, isLoading }: MoonProps) => {
   const phaseNum = parseFloat(phase.toString());
   const earthOrMoonGradient =
     phaseNum < 0.25 || phaseNum > 0.75 ? "earth" : "moon";
@@ -33,9 +34,12 @@ const Moon = ({ phase, color }: MoonProps) => {
     earthOrMoonGradient === "earth" ? "block" : "none";
 
   return (
-    <div className={styles["moon-earth-wrapper"]}>
-      <div className={styles["moon"]} style={moonStyles}></div>
-      <div className={styles["earth"]} style={earthStyles}></div>
+    <div className={styles.wrapper}>
+      <div
+        className={`${styles.moon} ${isLoading ? styles.loading : ""}`}
+        style={moonStyles}
+      ></div>
+      <div className={styles.earth} style={earthStyles}></div>
     </div>
   );
 };

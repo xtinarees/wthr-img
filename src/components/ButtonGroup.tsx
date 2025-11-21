@@ -22,12 +22,12 @@ const ButtonGroup = ({
   };
 
   return (
-    <div className={styles["button-group"]}>
+    <div className={styles.buttonGroup}>
       {options.map((item, i) => {
         const isActive = activeButtons.includes(item.value);
         return (
           <button
-            className={styles["button"]}
+            className={styles.button}
             key={i}
             onClick={() => handleChange(item.value)}
             style={isActive ? activeStyles : undefined}

@@ -7,22 +7,15 @@ import {
   latLngString,
   getInitialMoonPhaseValue,
 } from "./setup";
-import {
-  moonPhaseControl,
-  temperatureControl,
-  timeOptions,
-  conditionOptions,
-} from "./controlSettings";
 import { buildColorMap } from "./utils";
 import { WeatherData, LocationResult } from "./types";
 import Background from "./components/Background";
-import Range from "./components/Range";
-import ButtonGroup from "./components/ButtonGroup";
-import ToggleButton from "./components/ToggleButton";
 import BackgroundControls from "./components/BackgroundControls";
 import Moon from "./components/Moon";
 import Condition from "./components/Condition";
-import ControlsControl from "./components/ControlsControl";
+import ControlPanel from "./components/ControlPanel";
+
+import styles from "./index.module.css";
 
 const Body = () => {
   const [isNight, setIsNight] = useState<boolean>(false);
@@ -110,62 +103,27 @@ const Body = () => {
   };
 
   const colors = buildColorMap({ temp, isNight });
-  const controlsStyle = isControlsClosed
-    ? { display: "none" }
-    : { display: "block" };
-
   const contentStyle = { color: colors.content };
-  let contentClasses = isControlsClosed
-    ? "is-closed-controls"
-    : "is-open-controls";
-  contentClasses += colors.isDark ? " is-dark-color" : " is-light-color";
-  contentClasses += temp === "" ? " is-loading" : "";
+  const isLoading = Boolean(temp === "");
 
   return (
-    <div className={"content " + contentClasses} style={contentStyle}>
+    <div className={styles.content} style={contentStyle}>
       <Background color={colors.main} />
-      <BackgroundControls color={colors.main} />
-      <div className="controls">
-        <div className="controls__inner">
-          <ControlsControl
-            handleChange={handleChangeControls}
-            isClosed={isControlsClosed}
-          />
-          <div className="controls__content" style={controlsStyle}>
-            <p className="control control--info">
-              Initial results are based on your current weather and conditions.
-              Change the settings below to create a new image.
-            </p>
-            <Range
-              colors={colors}
-              range={temp}
-              updateRange={handleChangeTemperatureRange}
-              settings={temperatureControl}
-              isNight={isNight}
-            />
-            <Range
-              colors={colors}
-              range={rangeMoonPhase}
-              updateRange={handleChangeMoonRange}
-              settings={moonPhaseControl}
-              isNight={isNight}
-            />
-            <ButtonGroup
-              options={conditionOptions}
-              handleChange={handleChangeCondition}
-              activeButtons={selectedConditions}
-              colors={colors}
-            />
-            <ToggleButton
-              isActive={isNight}
-              handleChange={handleChangeTime}
-              options={timeOptions}
-              colors={colors}
-            />
-          </div>
-        </div>
-      </div>
-      <Moon phase={rangeMoonPhase} color={colors.main} />
+      {!isControlsClosed && <BackgroundControls color={colors.main} />}
+      <ControlPanel
+        handleChangeControls={handleChangeControls}
+        handleChangeTemperatureRange={handleChangeTemperatureRange}
+        handleChangeMoonRange={handleChangeMoonRange}
+        handleChangeCondition={handleChangeCondition}
+        isControlsClosed={isControlsClosed}
+        colors={colors}
+        temp={temp}
+        rangeMoonPhase={rangeMoonPhase}
+        selectedConditions={selectedConditions}
+        isNight={isNight}
+        handleChangeTime={handleChangeTime}
+      />
+      <Moon phase={rangeMoonPhase} color={colors.main} isLoading={isLoading} />
       <Condition types={selectedConditions} color={colors.main} />
     </div>
   );

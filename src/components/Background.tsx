@@ -1,4 +1,3 @@
-
 import tinycolor from "tinycolor2";
 import styles from "./Background.module.css";
 

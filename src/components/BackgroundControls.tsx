@@ -12,8 +12,8 @@ const BackgroundControls = ({ color }: { color: string }) => {
   const bgStyle = { backgroundImage: gradient };
 
   return (
-    <div className={styles.controls__background}>
-      <div className={styles.controls__backgroundInner} style={bgStyle}></div>
+    <div className={styles.controlsBackground}>
+      <div className={styles.controlsBackgroundInner} style={bgStyle}></div>
     </div>
   );
 };

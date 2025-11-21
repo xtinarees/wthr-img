@@ -7,14 +7,3 @@
   z-index: 2;
   overflow: hidden;
 }
-.rainy {
-  position: absolute;
-  border-radius: 50%;
-  transition: all 0.2s;
-}
-.snowy {
-  position: absolute;
-  transform: rotate(45deg);
-  background-color: white;
-  transition: all 0.2s;
-}
