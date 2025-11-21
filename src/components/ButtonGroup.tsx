@@ -1,5 +1,6 @@
 import { ButtonOption, ColorMap } from "../types";
 import styles from "./ButtonGroup.module.css";
+import cc from "classcat";
 
 interface ButtonGroupProps {
   options: ButtonOption[];
@@ -18,7 +19,6 @@ const ButtonGroup = ({
     background: colors.buttonBackground,
     color: colors.buttonText,
     borderColor: colors.content,
-    fontWeight: "bold" as const,
   };
 
   return (
@@ -27,10 +27,10 @@ const ButtonGroup = ({
         const isActive = activeButtons.includes(item.value);
         return (
           <button
-            className={styles.button}
+            className={cc([styles.button, { [styles.isActive]: isActive }])}
             key={i}
             onClick={() => handleChange(item.value)}
-            style={isActive ? activeStyles : undefined}
+            style={isActive ? activeStyles : {}}
           >
             {item.label}
           </button>

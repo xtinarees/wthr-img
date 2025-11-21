@@ -12,8 +12,9 @@ const BackgroundControls = ({ color }: { color: string }) => {
   const bgStyle = { backgroundImage: gradient };
 
   return (
-    <div className={styles.controlsBackground}>
-      <div className={styles.controlsBackgroundInner} style={bgStyle}></div>
+    <div className={styles.wrapper}>
+      <div className={styles.desktop} style={bgStyle}></div>
+      <div className={styles.mobile} style={{ backgroundColor: color }}></div>
     </div>
   );
 };

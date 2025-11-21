@@ -1,22 +1,41 @@
-.controlsBackground {
+.wrapper {
+  width: 320px;
   position: absolute;
   top: 0;
   right: 0;
   max-width: 100%;
   height: 100%;
   z-index: 100;
-  width: 320px;
 }
-@media screen and (max-width: 600px) {
-  .controlsBackground {
+@media screen and (max-width: 400px) {
+  .wrapper {
     width: 100%;
   }
 }
-.controlsBackgroundInner {
+.desktop,
+.mobile {
   position: absolute;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
+}
+
+.desktop {
+  opacity: 0.9;
+}
+
+.mobile {
   opacity: 0.8;
+}
+
+@media screen and (max-width: 400px) {
+  .desktop {
+    display: none;
+  }
+}
+@media screen and (min-width: 401px) {
+  .mobile {
+    display: none;
+  }
 }

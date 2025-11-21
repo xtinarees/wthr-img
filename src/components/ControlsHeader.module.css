@@ -11,7 +11,7 @@
   justify-content: end;
   transition: filter 0.2s linear;
 }
-.eader:hover {
+.header:hover {
   filter: brightness(0.7);
   transition: filter 0.2s linear;
 }
