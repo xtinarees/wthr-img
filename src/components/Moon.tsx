@@ -10,37 +10,55 @@ interface MoonProps {
 
 const Moon = ({ phase, color, isLoading }: MoonProps) => {
   const phaseNum = parseFloat(phase.toString());
+  const isNewMoon = phaseNum === 1 || phaseNum === 0;
   const earthOrMoonGradient =
     phaseNum < 0.25 || phaseNum > 0.75 ? "earth" : "moon";
-  const earthBackgroundCSS =
-    earthOrMoonGradient === "earth" ? "backgroundImage" : "backgroundColor";
-  const moonBackgroundCSS =
-    earthOrMoonGradient === "moon" ? "backgroundImage" : "backgroundColor";
+
   const percentages = getMoonGradientPercentages(phaseNum);
   const white = "rgba(255,255,255,1)";
   const transparent = "rgba(255,255,255,0)";
-  const colorStr =
-    earthOrMoonGradient === "earth" ? tinycolor(color).toString() : white;
-  const gradient = `radial-gradient(circle at ${toPercentString(percentages[0])}, ${colorStr} ${toPercentString(percentages[1])}, ${transparent} ${toPercentString(percentages[2])})`;
+  const getGradient = (gradientColor: string) => {
+    return `radial-gradient(circle at ${toPercentString(percentages[0])}, ${gradientColor} ${toPercentString(percentages[1])}, ${transparent} ${toPercentString(percentages[2])})`;
+  };
+  const colorGradient = getGradient(tinycolor(color).toString());
+  const whiteGradient = getGradient(white);
 
-  const moonStyles: React.CSSProperties = {};
-  (moonStyles as any)[moonBackgroundCSS] =
-    earthOrMoonGradient === "moon" ? gradient : white;
-
-  const earthStyles: React.CSSProperties = {};
-  (earthStyles as any)[earthBackgroundCSS] =
-    earthOrMoonGradient === "earth" ? gradient : "none";
-  (earthStyles as any)["display"] =
-    earthOrMoonGradient === "earth" ? "block" : "none";
+  let moonStyles = {};
+  let earthStyles = {};
+  if (earthOrMoonGradient === "earth" && isNewMoon) {
+    earthStyles = {
+      backgroundImage: colorGradient,
+      opacity: 1,
+    };
+    moonStyles = {
+      backgroundColor: transparent,
+    };
+  } else if (earthOrMoonGradient === "earth") {
+    earthStyles = {
+      backgroundImage: colorGradient,
+      opacity: 1,
+    };
+    moonStyles = {
+      backgroundColor: white,
+    };
+  } else if (earthOrMoonGradient === "moon") {
+    earthStyles = {
+      backgroundColor: transparent,
+      opacity: 0,
+    };
+    moonStyles = {
+      backgroundImage: whiteGradient,
+    };
+  }
 
   return (
-    <div className={styles.wrapper}>
+    <>
       <div
         className={`${styles.moon} ${isLoading ? styles.loading : ""}`}
         style={moonStyles}
       ></div>
       <div className={styles.earth} style={earthStyles}></div>
-    </div>
+    </>
   );
 };
 

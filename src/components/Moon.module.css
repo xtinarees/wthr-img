@@ -1,27 +1,29 @@
-.wrapper {
+.moon {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  border-radius: 50%;
   filter: blur(4px);
 }
-.moon {
-  border-radius: 50%;
-}
 .earth {
-  border-radius: 50%;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  filter: blur(4px);
 }
+
 @media (orientation: landscape) {
   .moon {
     width: 90vh;
     height: 90vh;
   }
   .earth {
-    width: 90vh;
-    height: 90vh;
+    /* extra pixels to get rid of white halo */
+    width: calc(90vh + 20px);
+    height: calc(90vh + 20px);
   }
 }
 @media (orientation: portrait) {
@@ -30,14 +32,15 @@
     height: 90vw;
   }
   .earth {
-    width: 90vw;
-    height: 90vw;
+    width: calc(90vw + 20px);
+    height: calc(90vw + 20px);
   }
 }
 
 .isLoading {
   animation: fadeInOut 4s ease-in-out infinite;
 }
+
 @keyframes fadeInOut {
   0% {
     opacity: 0;
