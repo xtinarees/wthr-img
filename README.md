@@ -34,6 +34,7 @@ No automation or staging environment has been set up. Follow these steps to upda
 1. Run `npm run build` locally.
 1. Run `npm run preview` to preview the production files locally and confirm they are ready to deploy.
 1. Upload files in `dist` directory to bucket via the AWS S3 GUI.
+1. Clear cache - Go to Cloudfront distribution > Invalidations > Create invalidation > Add object paths > `/*`.
 
 ## AWS Resource Config
 
