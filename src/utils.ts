@@ -144,7 +144,7 @@ export const buildColorMap = ({
     lightest: lightestColor,
     dark: darkColor,
     darker: darkerColor,
-    darkestColor: darkestColor,
+    darkest: darkestColor,
     content: contentColor,
     contentText: contentTextColor,
     buttonText: buttonTextColor,

@@ -1,40 +1,20 @@
-import axios, { AxiosResponse } from "axios";
-import { WeatherData, LocationResult } from "./types";
+import { WeatherData } from "./types";
 
 /*
  * Initial Setup
  */
-export const getLocation = (): Promise<GeolocationPosition> | false => {
-  if ("geolocation" in navigator) {
-    return new Promise<GeolocationPosition>((resolve, reject) =>
-      navigator.geolocation.getCurrentPosition(resolve, reject),
-    );
-  } else {
-    // geolocation is not supported
-    // get your location some other way
-    console.log("geolocation is not enabled on this browser");
-    return false;
-  }
-};
 
-export const getBackupLocation = (): Promise<
-  AxiosResponse<LocationResult["data"]>
-> => {
-  return axios.get("https://ipapi.co/json/");
-};
-
-export const getWeather = (
-  location: string,
-): Promise<AxiosResponse<WeatherData>> => {
+export const getWeather = async (location: string): Promise<WeatherData> => {
   const units = "&units=imperial";
   const appid = "&APPID=" + import.meta.env.VITE_OPENWEATHERMAP_KEY;
-
-  return axios.get(
+  const url =
     "https://api.openweathermap.org/data/2.5/weather?" +
-      location +
-      units +
-      appid,
-  );
+    location +
+    units +
+    appid;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Failed to fetch weather data");
+  return response.json();
 };
 
 export const latLngString = (lat: number, lng: number): string => {

@@ -54,7 +54,7 @@ const Moon = ({ phase, color, isLoading }: MoonProps) => {
   return (
     <>
       <div
-        className={`${styles.moon} ${isLoading ? styles.loading : ""}`}
+        className={`${styles.moon} ${isLoading ? styles.isLoading : ""}`}
         style={moonStyles}
       ></div>
       <div className={styles.earth} style={earthStyles}></div>

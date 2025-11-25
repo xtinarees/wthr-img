@@ -17,14 +17,8 @@ export interface WeatherData {
 }
 
 export interface LocationResult {
-  coords: {
-    latitude: number;
-    longitude: number;
-  };
-  data: {
-    latitude: number;
-    longitude: number;
-  };
+  latitude: number;
+  longitude: number;
 }
 
 export interface ColorMap {
@@ -34,7 +28,7 @@ export interface ColorMap {
   lightest: string;
   dark: string;
   darker: string;
-  darkestColor: string;
+  darkest: string;
   content: string;
   contentText: string;
   buttonText: string;

@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import SunCalc from "suncalc";
-import {
-  getLocation,
-  getBackupLocation,
-  getWeather,
-  latLngString,
-  getInitialMoonPhaseValue,
-} from "./setup";
+import { getWeather, latLngString, getInitialMoonPhaseValue } from "./setup";
 import { buildColorMap } from "./utils";
 import { WeatherData, LocationResult } from "./types";
 import Background from "./components/Background";
@@ -25,54 +19,91 @@ const Body = () => {
   const [, setWeather] = useState<WeatherData | "">("");
   const [temp, setTemp] = useState<number | "">("");
   const [isControlsClosed, setIsControlsClosed] = useState<boolean>(true);
+  const [isLocationError, setIsLocationError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    function setInitialWeatherState(
-      result: GeolocationPosition | { data: LocationResult["data"] },
+    async function setInitialWeatherState(
+      result: GeolocationPosition | LocationResult,
     ) {
+      setIsLoading(false);
+
       const date = new Date();
       const dateStamp = Math.floor(date.getTime() / 1000);
       const moonPhase = SunCalc.getMoonIllumination(date).phase;
       setRangeMoonPhase(getInitialMoonPhaseValue(moonPhase));
 
       const lat =
-        "coords" in result ? result.coords.latitude : result?.data.latitude;
+        "coords" in result ? result?.coords.latitude : result?.latitude;
       const lng =
-        "coords" in result ? result.coords.longitude : result?.data.longitude;
+        "coords" in result ? result?.coords.longitude : result?.longitude;
       const loc = latLngString(lat, lng);
 
-      getWeather(loc).then(function (result) {
+      await getWeather(loc).then(function (result) {
         const conditions: string[] = [];
         let night = true;
 
-        if ("rain" in result.data) {
+        if ("rain" in result) {
           conditions.push("rainy");
         }
-        if ("snow" in result.data) {
+        if ("snow" in result) {
           conditions.push("snowy");
         }
-        if (
-          result.data.sys.sunrise < dateStamp &&
-          result.data.sys.sunset > dateStamp
-        ) {
+        if (result.sys.sunrise < dateStamp && result.sys.sunset > dateStamp) {
           night = false;
         }
 
         setLocation(loc);
-        setWeather(result.data);
-        setTemp(result.data.main.temp);
+        setWeather(result);
+        setTemp(result.main.temp);
         setSelectedConditions(conditions);
         setIsNight(night);
       });
     }
 
-    const locationPromise = getLocation();
-    if (locationPromise) {
-      locationPromise.then(setInitialWeatherState).catch(() => {
-        getBackupLocation().then(setInitialWeatherState);
-      });
+    const getBackupLocation = async (): Promise<LocationResult> => {
+      const response = await fetch("https://ipapi.co/json/");
+      return response.json();
+    };
+
+    const handleError = (error: any) => {
+      console.error(error);
+      setIsLocationError(true);
+      setIsLoading(false);
+    };
+
+    const geolocationErrorCallback = (error: GeolocationPositionError) => {
+      if (error.code == error.PERMISSION_DENIED) {
+        // User denied permission
+        // Implement fallback here
+        console.error(
+          "User denied the request for Geolocation. Using fallback.",
+        );
+        getBackupLocation()
+          .then(setInitialWeatherState)
+          .catch((error) => {
+            handleError(error);
+          });
+      } else {
+        // Handle other errors like TIMEOUT or POSITION_UNAVAILABLE
+        console.error("Geolocation error: " + error.message);
+        getBackupLocation()
+          .then(setInitialWeatherState)
+          .catch((error) => {
+            handleError(error);
+          });
+      }
+    };
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        setInitialWeatherState,
+        geolocationErrorCallback,
+      );
     } else {
-      getBackupLocation().then(setInitialWeatherState);
+      // geolocation is not supported
+      // get your location some other way
+      handleError("Geolocation is not enabled on this browser");
     }
   }, []);
 
@@ -80,20 +111,28 @@ const Body = () => {
     setIsControlsClosed(closed);
   };
 
-  const handleChangeTemperatureRange = (val: string): void => {
+  const handleChangeTemperatureRange = (val: number): void => {
     setTemp(Number(val));
+    setIsLocationError(false);
+    setIsLoading(false);
   };
 
-  const handleChangeMoonRange = (val: string): void => {
+  const handleChangeMoonRange = (val: number): void => {
     setRangeMoonPhase(Number(val));
+    setIsLocationError(false);
+    setIsLoading(false);
   };
 
   const handleChangeTime = (val: boolean): void => {
     setIsNight(val);
+    setIsLocationError(false);
+    setIsLoading(false);
   };
 
   const handleChangeCondition = (selectedCondition: string): void => {
     setSelectedConditions((prev) => {
+      setIsLocationError(false);
+      setIsLoading(false);
       if (prev.includes(selectedCondition)) {
         return prev.filter((item) => item !== selectedCondition);
       } else {
@@ -104,7 +143,6 @@ const Body = () => {
 
   const colors = buildColorMap({ temp, isNight });
   const contentStyle = { color: colors.content };
-  const isLoading = Boolean(temp === "");
 
   return (
     <div className={styles.content} style={contentStyle}>
@@ -125,6 +163,20 @@ const Body = () => {
       />
       <Moon phase={rangeMoonPhase} color={colors.main} isLoading={isLoading} />
       <Condition types={selectedConditions} color={colors.main} />
+      {isLoading && (
+        <div className={styles.allowText}>
+          Loading... Please allow location access to fetch your local weather
+          data.
+        </div>
+      )}
+      {isLocationError && (
+        <div className={styles.errorText}>
+          Unable to determine your location. Please check your internet
+          connection or browser location permissions. Or, you can adjust the
+          controls under the settings menu on this page to generate an image
+          without location-based weather data.
+        </div>
+      )}
     </div>
   );
 };
