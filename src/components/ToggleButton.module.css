@@ -1,0 +1,25 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+}
+.button {
+  border: 1px solid;
+  border-color: inherit;
+  padding: 0.8rem 1rem;
+  text-align: center;
+  transition: opacity 0.2s linear;
+}
+
+.button:hover {
+  opacity: 0.8;
+  transition: opacity 0.2s linear;
+}
+.button:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-right: none;
+}
+.button:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}

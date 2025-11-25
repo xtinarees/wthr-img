@@ -1,0 +1,17 @@
+.range {
+  margin-bottom: 2em;
+}
+.number {
+  display: block;
+}
+
+.labelWrap {
+  display: flex;
+  justify-content: space-between;
+}
+.label {
+  font-weight: bold;
+}
+.input {
+  width: 100%;
+}
