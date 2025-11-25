@@ -1,6 +1,6 @@
 # wthr-img
 
-This repository stores the code for a [React](https://react.dev/) single page application built to visualize weather conditions. You can view the app [here](wthr-img.christinarees.com). It uses [Vite](https://vitejs.dev/) for local development and building static production files. It is hosted via [AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) and uses a [CloudFront distribution](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html) and [Route 53](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html);
+This repository stores the code for a [React](https://react.dev/) single page application built to visualize weather conditions. You can view the app [here](https://wthr-img.christinarees.com). It uses [Vite](https://vitejs.dev/) for local development and building static production files. It is hosted via [AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) and uses a [CloudFront distribution](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html) and [Route 53](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html);
 
 ## Initial Config
 
@@ -35,7 +35,7 @@ No automation or staging environment has been set up. Follow these steps to upda
 1. Run `npm run preview` to preview the production files locally and confirm they are ready to deploy.
 1. Upload files in `dist` directory to bucket via the AWS S3 GUI.
 
-### AWS Resource Config
+## AWS Resource Config
 
 - S3 Bucket: `wthr-img`
 - Cloudfront Distributuion: `EFN22DLER9L9Q`
